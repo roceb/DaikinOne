@@ -1,0 +1,12 @@
+{
+  "domain": "daikin_one",
+  "name": "Daikin One+",
+  "codeowners": ["@roceb"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/roceb/ha-daikin-one",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/roceb/ha-daikin-one/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

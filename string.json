@@ -1,0 +1,150 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Daikin One+ Setup",
+        "description": "Enter your Daikin One+ integrator token. You can obtain this from the Daikin One+ developer portal.",
+        "data": {
+          "integrator_token": "Integrator Token",
+          "api_key": "API key",
+          "email": "Email"
+        },
+        "data_description": {
+          "integrator_token": "The integrator token from your Daikin One+ API account",
+          "api_key": "API key provided by Daikin One",
+          "email": "Email for home app"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid integrator token. Please check your credentials.",
+      "cannot_connect": "Unable to connect to Daikin One+ API. Please check your network connection.",
+      "unknown": "An unexpected error occurred. Please check the logs for more information."
+    },
+    "abort": {
+      "already_configured": "This Daikin One+ account is already configured.",
+      "invalid_auth": "Invalid credentials in configuration.yaml.",
+      "cannot_connect": "Cannot connect to Daikin One+ API. Check configuration.yaml.",
+      "unknown": "Unexpected error importing configuration from YAML."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Daikin One+ Options",
+        "description": "Configure the Daikin One+ integration settings.",
+        "data": {
+          "scan_interval": "Update interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to poll the Daikin One+ API for updates (minimum 30 seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Indoor Temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor Temperature"
+      },
+      "indoor_humidity": {
+        "name": "Indoor Humidity"
+      },
+      "outdoor_humidity": {
+        "name": "Outdoor Humidity"
+      },
+      "air_quality_index": {
+        "name": "Air Quality Index"
+      },
+      "filter_remaining": {
+        "name": "Filter Remaining"
+      },
+      "uv_lamp_remaining": {
+        "name": "UV Lamp Remaining"
+      },
+      "equipment_status": {
+        "name": "Equipment Status"
+      },
+      "schedule_mode": {
+        "name": "Schedule Mode"
+      },
+      "fan_mode": {
+        "name": "Fan Mode"
+      },
+      "heat_setpoint": {
+        "name": "Heat Setpoint"
+      },
+      "cool_setpoint": {
+        "name": "Cool Setpoint"
+      },
+      "humidifier_setpoint": {
+        "name": "Humidifier Setpoint"
+      },
+      "dehumidifier_setpoint": {
+        "name": "Dehumidifier Setpoint"
+      }
+    },
+    "binary_sensor": {
+      "online": {
+        "name": "Online"
+      },
+      "cooling": {
+        "name": "Cooling"
+      },
+      "heating": {
+        "name": "Heating"
+      },
+      "fan_running": {
+        "name": "Fan Running"
+      },
+      "has_alert": {
+        "name": "Alert Active"
+      },
+      "filter_alert": {
+        "name": "Filter Alert"
+      },
+      "humidifier_active": {
+        "name": "Humidifier Active"
+      },
+      "dehumidifier_active": {
+        "name": "Dehumidifier Active"
+      }
+    },
+    "switch": {
+      "schedule_enabled": {
+        "name": "Schedule"
+      },
+      "away_mode": {
+        "name": "Away Mode"
+      },
+      "humidifier": {
+        "name": "Humidifier"
+      },
+      "dehumidifier": {
+        "name": "Dehumidifier"
+      },
+      "fan_circulate": {
+        "name": "Fan Circulate"
+      }
+    },
+    "climate": {
+      "thermostat": {
+        "name": "Thermostat"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "Authentication with Daikin One+ API failed. Please check your integrator token."
+    },
+    "connection_failed": {
+      "message": "Unable to connect to Daikin One+ API: {error}"
+    },
+    "api_error": {
+      "message": "Daikin One+ API error: {error}"
+    }
+  }
+}

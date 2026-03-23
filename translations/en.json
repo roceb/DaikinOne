@@ -1,0 +1,63 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Daikin One+ Setup",
+        "description": "Enter your Daikin One+ integrator token. You can obtain this from the Daikin One+ developer portal.",
+        "data": {
+          "integrator_token": "Integrator Token"
+        },
+        "data_description": {
+          "integrator_token": "The integrator token from your Daikin One+ API account"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid integrator token. Please check your credentials.",
+      "cannot_connect": "Unable to connect to Daikin One+ API. Please check your network connection.",
+      "unknown": "An unexpected error occurred. Please check the logs for more information."
+    },
+    "abort": {
+      "already_configured": "This Daikin One+ account is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Daikin One+ Options",
+        "description": "Configure the Daikin One+ integration settings.",
+        "data": {
+          "scan_interval": "Update interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to poll the Daikin One+ API for updates (minimum 30 seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Indoor Temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor Temperature"
+      },
+      "indoor_humidity": {
+        "name": "Indoor Humidity"
+      },
+      "outdoor_humidity": {
+        "name": "Outdoor Humidity"
+      },
+      "air_quality_index": {
+        "name": "Air Quality Index"
+      },
+      "filter_remaining": {
+        "name": "Filter Remaining"
+      },
+      "uv_lamp_remaining": {
+        "name": "UV Lamp Remaining"
+      }
+      }
+  }
+}
