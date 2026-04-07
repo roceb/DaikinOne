@@ -197,14 +197,18 @@ class DaikinOneClimate(CoordinatorEntity[DaikinOneDataUpdateCoordinator], Climat
         elif self.hvac_mode == HVACMode.HEAT:
             if (temp := kwargs.get(ATTR_TEMPERATURE)) is not None:
                 payload["heatSetpoint"] = temp
+                payload["coolSetpoint"] = round(temp - MIN_DEADBAND_CELSIUS,1)
             elif (low := kwargs.get("target_temp_low")) is not None:
                 payload["heatSetpoint"] = low
+                payload["coolSetpoint"] = round(low - MIN_DEADBAND_CELSIUS,1)
 
         elif self.hvac_mode == HVACMode.COOL:
             if (temp := kwargs.get(ATTR_TEMPERATURE)) is not None:
                 payload["coolSetpoint"] = temp
+                payload["heatSetpoint"] = round(temp + MIN_DEADBAND_CELSIUS,1)
             elif (high := kwargs.get("target_temp_high")) is not None:
                 payload["coolSetpoint"] = high
+                payload["heatSetpoint"] = round(high + MIN_DEADBAND_CELSIUS,1)
 
         if payload:
             _LOGGER.debug("Sending temperature update to Daikin: %s", payload)
