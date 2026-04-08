@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import asyncio
 from typing import Any
 
 from homeassistant.components.climate import (
@@ -150,16 +151,24 @@ class DaikinOneClimate(CoordinatorEntity[DaikinOneDataUpdateCoordinator], Climat
 
     @property
     def max_temp(self) -> float:
-        return MAX_TEMP_CELSIUS
 
+        return MAX_TEMP_CELSIUS
+    async def _delayed_refresh(self) -> None:
+        """Wait briefly before refreshing from cloud to prevent flickers."""
+        await asyncio.sleep(5)
+        await self.coordinator.async_request_refresh()
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set new target hvac mode."""
         daikin_mode = REVERSE_HVAC_MODE_MAPPING.get(hvac_mode, MODE_OFF)
 
         payload = {"mode": daikin_mode}
+        self._device.data["mode"] = daikin_mode
+        self.async_write_ha_state()
 
-        await self._api.update_device(self._device_id, payload)
-        await self.coordinator.async_request_refresh()
+        success = await self._api.update_device(self._device_id, payload)
+        if success:
+            await self._delayed_refresh()
+            await self.coordinator.async_request_refresh()
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         """Set new target temperature."""
@@ -195,22 +204,20 @@ class DaikinOneClimate(CoordinatorEntity[DaikinOneDataUpdateCoordinator], Climat
             payload["coolSetpoint"] = round(target_high,1)
 
         elif self.hvac_mode == HVACMode.HEAT:
-            if (temp := kwargs.get(ATTR_TEMPERATURE)) is not None:
-                payload["heatSetpoint"] = temp
-                payload["coolSetpoint"] = round(temp - MIN_DEADBAND_CELSIUS,1)
-            elif (low := kwargs.get("target_temp_low")) is not None:
-                payload["heatSetpoint"] = low
-                payload["coolSetpoint"] = round(low - MIN_DEADBAND_CELSIUS,1)
+            temp = kwargs.get(ATTR_TEMPERATURE) or kwargs.get("target_temp_low")
+            # if (temp := kwargs.get(ATTR_TEMPERATURE)) is not None:
+            if temp is not None:
+                payload["heatSetpoint"] = round(temp,1)
+                payload["coolSetpoint"] = round(temp + MIN_DEADBAND_CELSIUS,1)
 
         elif self.hvac_mode == HVACMode.COOL:
+            temp = kwargs.get(ATTR_TEMPERATURE) or kwargs.get("target_temp_high")
             if (temp := kwargs.get(ATTR_TEMPERATURE)) is not None:
-                payload["coolSetpoint"] = temp
-                payload["heatSetpoint"] = round(temp + MIN_DEADBAND_CELSIUS,1)
-            elif (high := kwargs.get("target_temp_high")) is not None:
-                payload["coolSetpoint"] = high
-                payload["heatSetpoint"] = round(high + MIN_DEADBAND_CELSIUS,1)
+                payload["coolSetpoint"] = round(temp,1)
+                payload["heatSetpoint"] = round(temp - MIN_DEADBAND_CELSIUS,1)
 
         if payload:
+            payload["mode"] = REVERSE_HVAC_MODE_MAPPING.get(self.hvac_mode, MODE_AUTO)
             _LOGGER.debug("Sending temperature update to Daikin: %s", payload)
             success = await self._api.update_device(self._device_id, payload)
             if success:
@@ -218,8 +225,9 @@ class DaikinOneClimate(CoordinatorEntity[DaikinOneDataUpdateCoordinator], Climat
                     self._device.data["heatSetpoint"] = payload["heatSetpoint"]
                 if "coolSetpoint" in payload:
                     self._device.data["coolSetpoint"] = payload["coolSetpoint"]
+                if "mode" in payload:
+                    self._device.data["mode"] = payload["mode"]
                 self.async_write_ha_state()
-                _LOGGER.debug(f"Updating ui manually, {self._device.data.get("coolSetpoint")}")
             await self.coordinator.async_request_refresh()
 
     async def async_set_fan_mode(self, fan_mode: str) -> None:

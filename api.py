@@ -406,7 +406,7 @@ class DaikinOneApi:
         # payload["fanMode"] = data.get("fanMode", device.data.get("fanMode"))
         h_set = data.get("heatSetpoint", data.get("spHeat", device.data.get("heatSetpoint")))
         c_set = data.get("coolSetpoint", data.get("spCool", device.data.get("coolSetpoint")))
-        _LOGGER.error(f"This is the temp unit {h_set} and the cool {c_set}")
+        # _LOGGER.error(f"This is the temp heat {h_set} and the cool {c_set}")
         if h_set is not None:
             payload["heatSetpoint"] = round(float(h_set), 1)
         if c_set is not None:
